@@ -1,0 +1,8 @@
+# Make sure cron sees a PATH like the one I normally use
+PATH=/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin
+
+# update this variable for your personal account
+USER=dave
+
+#minute hour  day   month  day  command
+0       0     *     *      *    "/home/$USER/.spambayes/tte" 2>&1 1>/dev/null | mail -s "Spam Training Results" $USER@localhost

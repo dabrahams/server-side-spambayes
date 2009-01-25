@@ -1,0 +1,92 @@
+# -*-any-ini-*-
+
+[imap]
+# The train-to-exhaustion procedure will need access to your IMAP
+# server to read the ham and spam training folders.  You'll want to 
+#
+#   chmod 600 .spambayesrc
+#
+# So that nobody can read your password.
+server:boost-consulting.com
+use_ssl:True
+username:<YOUR USERNAME HERE>
+password:<YOUR PASSWORD HERE>
+
+# Which folders to train on when using the web interface.  Doesn't
+# affect nightly training job.
+ham_train_folders:training.ham
+spam_train_folders:training.spam
+
+# Where to file things when using the web interface.  Doesn't
+# affect nightly training job.
+spam_folder:filtered.spam
+unsure_folder:filtered.unsure
+
+[Storage]
+# The classification procedure needs to know where to find the
+# training data.
+messageinfo_storage_file:/home/<YOUR USERNAME HERE>/.spambayes/messageinfo.fs
+persistent_storage_file:/home/<YOUR USERNAME HERE>/.spambayes/hammie.fs
+persistent_use_database:dbm
+
+[html_ui]
+# The web interface provides some nice capabilities you might want to
+# check out.  These settings allow you to do it by tunneling through
+# ssh as follows:
+#
+#  ssh -L 8007:localhost:8007 boostpro.com sb_imapfilter.py
+#
+# and then open http://localhost:8007 in a browser.
+#
+# Note: *** always tunnel through ssh or your password will be sent ***
+#       *** over the wire as plaintext!                             ***
+#
+# Note: Changing options through the web interface will overwrite this
+# file and likely eradicate comments
+port:8007
+display_adv_find:True
+allow_remote_connections:localhost
+http_authentication:None
+
+[Headers]
+# Set this to True to put more information about the reasons for
+# classification in the header
+include_evidence:False
+# This includes the ham or spam score in the message in addition to
+# the classification.  My filing rules depend on that (see .dovecot.sieve).
+include_score:True
+
+[Tokenizer]
+# Search for Habeas Headers: (EXPERIMENTAL) If true, search for the
+# habeas headers (see http://www.habeas.com). If they are present and
+# correct, this should be a strong ham sign, if they are present and
+# incorrect, this should be a strong spam sign.
+x-search_for_habeas_headers:True
+
+# Generate IP address tokens from hostnames: (EXPERIMENTAL) Generate
+# IP address tokens from hostnames. Requires PyDNS
+# (http://pydns.sourceforge.net/).
+x-lookup_ip:True
+lookup_ip_cache:/home/<YOUR USERNAME HERE>/.spambayes/dnscache
+
+# Extract clues about url structure: (EXPERIMENTAL) Note whether url
+# contains non-standard port or user/password elements.
+x-pick_apart_urls:True
+
+# Options for doing text recognition in embedded images
+crack_images:True
+crack_image_cache:/home/<YOUR USERNAME HERE>/.spambayes/imagecache.pck
+image_size:True
+max_image_size:100000
+ocr_engine:gocr
+
+record_header_absence:True
+summarize_email_prefixes:True
+summarize_email_suffixes:True
+mine_received_headers:True
+
+[URLRetriever]
+x-cache_directory:/home/<YOUR USERNAME HERE>/.spambayes/url-cache
+
+[globals]
+verbose:True

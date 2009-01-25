@@ -1,0 +1,26 @@
+# This file is ~/.procmailrc
+
+# This variable identifies the program that will deliver messages to
+# the mailer
+DELIVER="/usr/local/libexec/dovecot/deliver"
+
+# Comment this out to stop logging procmail processing.  You may want
+# to leave this enabled until you feel comfortable with the spam
+# filtering.
+LOGFILE=$HOME/.procmaillog
+
+# Change to 'on' to get _long_ procmail log. 
+# NB: if this is short, I don't want to see long: I get
+# a one-line summary for every email procmail looks at!
+VERBOSE=off
+
+
+# Pass the message through the SpamBayes filter program, which will
+# insert an X-Spambayes-Classification header
+:0 fw
+|sb_filter.py
+
+# Send the message to dovecot for delivery.  See ~/.dovecot.sieve for
+# further processing instructions
+:0 w
+| $DELIVER

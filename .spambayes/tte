@@ -1,0 +1,47 @@
+#!/bin/sh
+# 
+# This script will run through your ham and spam training folders and
+# create a new database to be used for classification of incoming mail
+# using a "train-to-exhaustion" strategy.
+SERVER=":$USER:<yourpassword>@localhost"
+HOME="/home/$USER"
+
+# Where the ham and spam training folders (where you put
+# unsure/misclassified stuff) live.  These live together as subfolders
+# of your "training" folder.  Be sure to edit your .spambayesrc file
+# accordingly if you change these names
+HAM_FOLDER=training.ham
+SPAM_FOLDER=training.spam
+
+# Where we'll store training databases.  You must create this folder
+# if it doesn't exist.
+DATA="$HOME/.spambayes"
+
+# -v makes it verbose
+#
+# -R makes it train in reverse order, so more recent messages get priority
+#
+# --ratio=2:1 limits the amount of imbalance between spam and ham
+# messages that actually get used for training.  Having things way out
+# of balance degrades training quality, but chances are you're going
+# to accumulate more misclassified/unsure spam than ham, and you'll
+# want to use some of it.
+#
+# -o Categorization:ham_cutoff and spam_cutoff temporarily make the
+# ham and spam classification windows smaller, which makes tte.py work
+# harder to get known spam and ham to classify towards the extremes.
+# As a result when doing classification on new mail, it will tend to
+# drag a few messages that are a bit less spammy/hammy into the
+# correct regions, leaving less in unsure.
+python /home/dave/src/spambayes/contrib/tte.py \
+    -v \
+    -R \
+    --ratio=2:1 \
+    -g "$SERVER:$HAM_FOLDER" \
+    -s "$SERVER:$SPAM_FOLDER" \
+    -o Storage:messageinfo_storage_file:$DATA/messageinfo.fs.new \
+    -o Storage:persistent_storage_file:$DATA/hammie.fs.new \
+    -o Categorization:ham_cutoff:0.02  \
+    -o Categorization:spam_cutoff:0.98 \
+&& mv "$DATA/messageinfo.fs.new" "$DATA/messageinfo.fs" \
+&& mv "$DATA/hammie.fs.new" "$DATA/hammie.fs"
