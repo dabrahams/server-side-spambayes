@@ -37,6 +37,7 @@ python /home/dave/src/spambayes/contrib/tte.py \
     -v \
     -R \
     --ratio=2:1 \
+    $* \
     -g "$SERVER:$HAM_FOLDER" \
     -s "$SERVER:$SPAM_FOLDER" \
     -o Storage:messageinfo_storage_file:$DATA/messageinfo.fs.new \
