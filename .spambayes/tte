@@ -22,7 +22,7 @@ DATA="$HOME/.spambayes"
 #
 # -R makes it train in reverse order, so more recent messages get priority
 #
-# --ratio=2:1 limits the amount of imbalance between spam and ham
+# --ratio=4:1 limits the amount of imbalance between spam and ham
 # messages that actually get used for training.  Having things way out
 # of balance degrades training quality, but chances are you're going
 # to accumulate more misclassified/unsure spam than ham, and you'll
@@ -37,7 +37,7 @@ DATA="$HOME/.spambayes"
 PYTHONPATH="$SPAMBAYES" python "$SPAMBAYES/contrib/tte.py" \
     -v \
     -R \
-    --ratio=2:1 \
+    --ratio=4:1 \
     $* \
     -g "$SERVER:$HAM_FOLDER" \
     -s "$SERVER:$SPAM_FOLDER" \
